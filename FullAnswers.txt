@@ -1,0 +1,591 @@
+1
+import {React} from "react";
+
+const Greetings=()=>{
+    const username='Veera Selvan';
+    const localdate=new Date().toLocaleDateString('en-us',{
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        date: 'numeric',
+    });
+    return(
+        <div>
+            <h1>Hello, {username}!</h1>
+            <p>Welcome to our website. Today is {localdate}.</p>
+        </div>
+    )
+} 
+
+export default Greetings;
+
+2
+
+import {React,useState} from "react";
+
+const Greetings=()=>{
+    const[count,setCount]=useState(0);
+
+    const increment=()=>setCount(count+1);
+    const decrement=()=>setCount(count-1);
+
+    return(
+        <div>
+            <h1>Count: {count}</h1>
+            <button onClick={increment}>Increment</button>
+            <button onClick={decrement}>Decrement</button>
+        </div>
+    );
+};
+
+export default Greetings;
+
+3
+
+import {React,useState} from "react";
+
+const Greetings=()=>{
+    const staticdata = "Hello, I am static data!";
+    const dynamicdata = new Date().toISOString();
+
+    return(
+        <>
+            <p>Static: {staticdata}</p>
+            <p>Dynamic: {dynamicdata}</p>
+        </>
+    );
+};
+
+export default Greetings;
+
+4
+
+ToDoList:
+import React, { useState } from 'react';
+import TodoItem from './TodoItem';
+import './TodoList.css';
+
+const TodoList = () => {
+    const [newTodo, setNewTodo] = useState('');
+    const [todos, setTodos] = useState([]);
+
+    const addTodo = () => {
+        if (newTodo.trim()) {
+            setTodos([...todos, newTodo]);
+            setNewTodo('');
+        }
+    };
+
+    const deleteTodo = (index) => {
+        setTodos(todos.filter((_, i) => i !== index));
+    };
+
+    return (
+        <div className="container">
+            <h1 className="heading">Todo List</h1>
+            <div className="inputContainer">
+                <input
+                    type="text"
+                    className="input"
+                    placeholder="Add a new todo"
+                    value={newTodo}
+                    onChange={(e) => setNewTodo(e.target.value)}
+                />
+                <button className="addButton" onClick={addTodo}>Add</button>
+            </div>
+            <div className="todoList">
+                {todos.map((todo, index) => (
+                    <TodoItem
+                        key={index}
+                        text={todo}
+                        onDelete={() => deleteTodo(index)}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default TodoList;
+
+ToDoItem:
+import React from 'react';
+import PropTypes from 'prop-types';
+import './TodoList.css';
+
+const TodoItem = ({ text, onDelete }) => {
+    return (
+        <div className="todoItem">
+            <span>{text}</span>
+            <button className="deleteButton" onClick={onDelete}>Delete</button>
+        </div>
+    );
+};
+
+TodoItem.propTypes = {
+    text: PropTypes.string.isRequired,
+    onDelete: PropTypes.func.isRequired,
+};
+
+export default TodoItem;
+
+5
+
+import React from 'react';
+import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
+import treeImage from '../assets/images/tree.jpg'; // Ensure the image is in the correct directory
+
+const CustomCard = () => {
+    return (
+        <Card style={{ maxWidth: 345, margin: 'auto', marginTop: '20px' }}>
+            <CardMedia
+                component="img"
+                height="140"
+                image={treeImage}
+                alt="Tree"
+            />
+            <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                    Nature
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    In the embrace of nature, the symphony of chirping birds and the gentle caress of a breeze paint a serene canvas of tranquility.
+                </Typography>
+            </CardContent>
+            <CardActions>
+                <Button size="small" onClick={() => console.log('Share button clicked')}>Share</Button>
+                <Button size="small" onClick={() => console.log('Learn More button clicked')}>Learn More</Button>
+            </CardActions>
+        </Card>
+    );
+};
+
+export default CustomCard;
+
+
+6
+
+ErrorBoundary.js
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+class ErrorBoundary extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error) {
+        return { hasError: true };
+    }
+
+    componentDidCatch(error, info) {
+        console.error('Error caught by ErrorBoundary:', error, info);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return <h1>Something went wrong.</h1>;
+        }
+        return this.props.children;
+    }
+}
+
+ErrorBoundary.propTypes = {
+    children: PropTypes.node.isRequired,
+};
+
+export default ErrorBoundary;
+
+
+Hero.jsx
+import React from 'react';
+import PropTypes from 'prop-types';
+
+const Hero = ({ heroName }) => {
+    if (heroName === 'Joker') {
+        throw new Error('Not a hero');
+    }
+    return <div>{heroName}</div>;
+};
+
+Hero.propTypes = {
+    heroName: PropTypes.string.isRequired,
+};
+
+export default Hero;
+
+
+App.js
+import React from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
+import Hero from './components/Hero';
+
+const App = () => {
+    return (
+        <div className="App">
+            <ErrorBoundary>
+                <Hero heroName="Batman" />
+            </ErrorBoundary>
+            <ErrorBoundary>
+                <Hero heroName="Joker" />
+            </ErrorBoundary>
+        </div>
+    );
+};
+
+export default App;
+
+
+
+7
+Loginform using ref
+import React, { useRef } from 'react';
+
+const LoginForm = () => {
+    const emailInputRef = useRef(null);
+    const passwordInputRef = useRef(null);
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        const formData = {
+            email: emailInputRef.current.value,
+            password: passwordInputRef.current.value,
+        };
+
+        console.log(formData);
+
+        // Clear input fields and set focus back to the email field
+        emailInputRef.current.value = '';
+        passwordInputRef.current.value = '';
+        emailInputRef.current.focus();
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label htmlFor="email">Email:</label>
+                <input type="email" id="email" ref={emailInputRef} />
+            </div>
+            <div>
+                <label htmlFor="password">Password:</label>
+                <input type="password" id="password" ref={passwordInputRef} />
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    );
+};
+
+export default LoginForm;
+
+
+8
+
+WithLoading.jsx
+import React, { Component } from 'react';
+
+const WithLoading = (WrappedComponent) => {
+    return class extends Component {
+        state = {
+            isLoading: true,
+        };
+
+        componentDidMount() {
+            setTimeout(() => {
+                this.setState({ isLoading: false });
+            }, 2000); // Simulates a 2-second loading delay
+        }
+
+        render() {
+            const { isLoading } = this.state;
+            return isLoading ? <div>Loading...</div> : <WrappedComponent />;
+        }
+    };
+};
+
+export default WithLoading;
+
+
+MyComponent.jsx
+
+import React from 'react';
+
+const MyComponent = () => {
+    return <h1>Hello, I'm the wrapped component!</h1>;
+};
+
+export default MyComponent;
+
+
+App.js
+
+import React from 'react';
+import WithLoading from './components/WithLoading';
+import MyComponent from './components/MyComponent';
+
+const WrappedComponentWithLoading = WithLoading(MyComponent);
+
+const App = () => {
+    return (
+        <div className="App">
+            <WrappedComponentWithLoading />
+        </div>
+    );
+};
+
+export default App;
+
+
+9
+
+UserList.jsx
+
+import React, { useState, useEffect } from 'react';
+import { Avatar, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { getAllUsers } from '../services/UserApi';
+
+const UserList = () => {
+    const [userList, setUserList] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const users = await getAllUsers();
+                setUserList(users);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    return (
+        <div>
+            <Typography variant="h4" gutterBottom>
+                User List
+            </Typography>
+            <List>
+                {userList.map((user) => (
+                    <ListItem key={user.id}>
+                        <ListItemAvatar>
+                            <Avatar>{user.name.charAt(0)}</Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary={user.name} secondary={user.email} />
+                    </ListItem>
+                ))}
+            </List>
+        </div>
+    );
+};
+
+export default UserList;
+
+
+UserApi.js
+
+import axios from 'axios';
+
+const BASE_URL = 'http://localhost:3005';
+
+export const getAllUsers = async () => {
+    try {
+        const response = await axios.get(`${BASE_URL}/users`);
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to fetch users');
+    }
+};
+
+
+db.json
+
+{
+    "users": [
+        { "id": 1, "name": "John Doe", "email": "john.doe@example.com" },
+        { "id": 2, "name": "Jane Smith", "email": "jane.smith@example.com" },
+        { "id": 3, "name": "Alice Johnson", "email": "alice.johnson@example.com" }
+    ]
+}
+
+npx json-server --watch db.json -p 3005
+
+
+
+
+10
+
+Counter.jsx
+
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { increment, decrement } from '../redux/CounterAction';
+
+const Counter = () => {
+    const count = useSelector((state) => state.count);
+    const dispatch = useDispatch();
+
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => dispatch(increment())}>Increment</button>
+            <button onClick={() => dispatch(decrement())}>Decrement</button>
+        </div>
+    );
+};
+
+export default Counter;
+
+
+CounterAction.js
+
+export const increment = () => {
+    return {
+        type: 'INCREMENT'
+    };
+};
+
+export const decrement = () => {
+    return {
+        type: 'DECREMENT'
+    };
+};
+
+
+CounterReducer.js
+
+const initialState = {
+    count: 0
+};
+
+const CounterReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case 'INCREMENT':
+            return { ...state, count: state.count + 1 };
+        case 'DECREMENT':
+            return { ...state, count: state.count - 1 };
+        default:
+            return state;
+    }
+};
+
+export default CounterReducer;
+
+
+Store.js
+
+import { createStore } from 'redux';
+import CounterReducer from './CounterReducer';
+
+export const Store = createStore(CounterReducer);
+
+
+App.js
+
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Store } from './redux/Store';
+import Counter from './components/Counter';
+
+const App = () => {
+    return (
+        <Provider store={Store}>
+            <div className="App">
+                <Counter />
+            </div>
+        </Provider>
+    );
+};
+
+export default App;
+npm install redux react-redux
+
+
+
+11
+
+Theme.jsx
+
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleTheme } from '../redux/ThemeAction';
+
+const Theme = () => {
+    const theme = useSelector((state) => state.theme);
+    const dispatch = useDispatch();
+
+    return (
+        <div
+            data-testid="theme-container"
+            style={{
+                backgroundColor: theme,
+                height: '100vh',
+                color: theme === 'black' ? 'white' : 'black',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            <button onClick={() => dispatch(toggleTheme())}>Theme</button>
+        </div>
+    );
+};
+
+export default Theme;
+
+
+ThemeAction.js
+
+export const toggleTheme = () => {
+    return {
+        type: 'TOGGLE_THEME',
+    };
+};
+
+
+ThemeReducer.js
+
+const initialState = {
+    theme: 'black',
+};
+
+const ThemeReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case 'TOGGLE_THEME':
+            return {
+                ...state,
+                theme: state.theme === 'black' ? 'white' : 'black',
+            };
+        default:
+            return state;
+    }
+};
+
+export default ThemeReducer;
+
+
+Store.js
+
+import { createStore } from 'redux';
+import ThemeReducer from './ThemeReducer';
+
+export const Store = createStore(ThemeReducer);
+
+
+App.js
+
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Store } from './redux/Store';
+import Theme from './components/Theme';
+
+const App = () => {
+    return (
+        <Provider store={Store}>
+            <Theme />
+        </Provider>
+    );
+};
+
+export default App;
